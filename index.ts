@@ -12,7 +12,14 @@ const compression = require('compression')
 const { nanoid } = require('nanoid')
 
 /* Global middlewares */
-app.use(cors())
+const corsOptions ={
+   origin:'*', 
+   credentials:true,
+   optionSuccessStatus:200
+}
+
+app.use(cors(corsOptions))
+
 app.use(compression())
 app.use(express.json({limit: '5mb'}))
 app.use(express.urlencoded({extended: false}))
