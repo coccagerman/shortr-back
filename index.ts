@@ -6,22 +6,22 @@ const express = require('express')
 const app = express()
 const server = require('http').Server(app)
 
-/* Types */
-import { Request, Response } from 'express'
-
-/* Db */
-import pool from './db/db'
-
 /* Import modules */
 const cors = require('cors')
 const compression = require('compression')
 const { nanoid } = require('nanoid')
 
 /* Global middlewares */
-app.use(cors())
+app.use(cors({ origin: "https://shortr-navy.vercel.app/", optionsSuccessStatus: 200 }))
 app.use(compression())
 app.use(express.json({limit: '5mb'}))
 app.use(express.urlencoded({extended: false}))
+
+/* Types */
+import { Request, Response } from 'express'
+
+/* Db */
+import pool from './db/db'
 
 /* Requests */
 /* URL shortening */
