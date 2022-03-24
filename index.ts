@@ -28,7 +28,7 @@ app.use(express.urlencoded({extended: false}))
 app.post('/', async (req: Request, res: Response) => {
   try {
     const { origurl } = req.body
-    const urlid = nanoid()
+    const urlid = nanoid().substring(0, 7)
     const shorturl = process.env.BASEURL + urlid
 
     pool.query('INSERT INTO urls(origurl, shorturl, urlid) VALUES($1, $2, $3)', [origurl, shorturl, urlid]).then(

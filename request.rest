@@ -3,7 +3,7 @@ POST http://localhost:3030/
 content-type: application/json
 
 {
-    "origurl": "https://www.linkedin.com/feed"
+    "origurl": "https://www.linkedin.com/feed/123"
 }
 
 ###
