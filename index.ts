@@ -39,7 +39,10 @@ app.post('/', async (req: Request, res: Response) => {
     const shorturl = process.env.BASEURL + urlid
 
     pool.query('INSERT INTO urls(origurl, shorturl, urlid) VALUES($1, $2, $3)', [origurl, shorturl, urlid]).then(
-      res.header('Access-Control-Allow-Origin', "*").send(shorturl)
+      res.header('Access-Control-Allow-Origin', "*"),
+      res.header('Access-Control-Allow-Methods', 'GET,POST'),
+      res.header('Access-Control-Allow-Headers', 'Content-Type'),
+      res.send(shorturl)
     )
 
   } catch (err) {
@@ -51,7 +54,10 @@ app.post('/', async (req: Request, res: Response) => {
 app.get('/:urlid', async (req: Request, res: Response) => {
   try {
     const origUrl = await pool.query('SELECT origurl FROM urls WHERE urlid = $1', [req.params.urlid])
-    res.header('Access-Control-Allow-Origin', "*").send(origUrl.rows[0].origurl)
+    res.header('Access-Control-Allow-Origin', "*"),
+    res.header('Access-Control-Allow-Methods', 'GET,POST'),
+    res.header('Access-Control-Allow-Headers', 'Content-Type'),
+    res.send(origUrl.rows[0].origurl)
   } catch (err) {
     res.status(500).json(err)
   }
