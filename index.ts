@@ -11,14 +11,7 @@ const cors = require('cors')
 const compression = require('compression')
 const { nanoid } = require('nanoid')
 
-/* Global middlewares */
-const corsOptions ={
-   origin:'*', 
-   credentials:true,
-   optionSuccessStatus:200
-}
-
-app.use(cors(corsOptions))
+app.use(cors())
 
 app.use(compression())
 app.use(express.json({limit: '5mb'}))
@@ -39,9 +32,6 @@ app.post('/', async (req: Request, res: Response) => {
     const shorturl = process.env.BASEURL + urlid
 
     pool.query('INSERT INTO urls(origurl, shorturl, urlid) VALUES($1, $2, $3)', [origurl, shorturl, urlid]).then(
-      res.header('Access-Control-Allow-Origin', "*"),
-      res.header('Access-Control-Allow-Methods', 'GET,POST'),
-      res.header('Access-Control-Allow-Headers', 'Content-Type'),
       res.send(shorturl)
     )
 
@@ -54,26 +44,9 @@ app.post('/', async (req: Request, res: Response) => {
 app.get('/:urlid', async (req: Request, res: Response) => {
   try {
     const origUrl = await pool.query('SELECT origurl FROM urls WHERE urlid = $1', [req.params.urlid])
-    res.header('Access-Control-Allow-Origin', "*"),
-    res.header('Access-Control-Allow-Methods', 'GET,POST'),
-    res.header('Access-Control-Allow-Headers', 'Content-Type'),
     res.send(origUrl.rows[0].origurl)
   } catch (err) {
     res.status(500).json(err)
-  }
-})
-
-/* Heroku DB testing */
-.get('/db', async (req: Request, res: Response) => {
-  try {
-    const client = await pool.connect()
-    const result = await client.query('SELECT * FROM shortr')
-    const results = { 'results': (result) ? result.rows : null}
-    res.send( results )
-    client.release()
-  } catch (err) {
-    console.error(err)
-    res.send("Error " + err)
   }
 })
 
