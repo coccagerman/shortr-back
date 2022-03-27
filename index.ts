@@ -63,6 +63,20 @@ app.get('/:urlid', async (req: Request, res: Response) => {
   }
 })
 
+/* Heroku DB testing */
+.get('/db', async (req: Request, res: Response) => {
+  try {
+    const client = await pool.connect()
+    const result = await client.query('SELECT * FROM shortr')
+    const results = { 'results': (result) ? result.rows : null}
+    res.send( results )
+    client.release()
+  } catch (err) {
+    console.error(err)
+    res.send("Error " + err)
+  }
+})
+
 /* Initialize server */
 server.listen(process.env.PORT || 3030, () => console.log('Server is listening.') )
 server.on('error', (error: Error) => console.error(error) )
